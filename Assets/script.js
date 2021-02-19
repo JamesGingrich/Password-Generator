@@ -1,10 +1,23 @@
 // Assignment Code
-var characters = prompt("How many characters should the password containt (8-128)");
-var upperCase = prompt("Should the password contain uppercase Letters?");
-var lowerCase = prompt("Should the password contain lowercase Letters");
-var numbers = prompt("Should the password contain numbers?");
-var symbols = prompt("Should the password contain symbols?");
 var generateBtn = document.querySelector("#generate");
+var enter;
+var confirmNumber;
+var confirmCharacter;
+var confirmUppercase;
+var confirmLowercase;
+// Password variable values: 
+character = ["!", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", "\:", "\;", " < ", "=", " > ", " ? ", "@", "[", "\\", "]", " ^ ", "_", "`", "{", "|", "}", "~"];
+number = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+alpha = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+space = [];
+var choices;
+
+// variable that creates uppercase conversion
+var toUpper = function (x) {
+    return x.toUpperCase();
+};
+
+alpha2 = alpha.map(toUpper);
 
 // Write password to the #password input
 function writePassword() {
@@ -15,86 +28,88 @@ function writePassword() {
 
 }
 
-function randomFunc(input) {
-  let randomChar;
-  if (input === "hasUpper") {
-      randomChar = getRandomUpper();
-  }
-  if (input === "hasLower") {
-      randomChar = getRandomLower();
-  }
-  if (input === "hasNumbers") {
-      randomChar = getRandomNumber();
-  }
-  if (input === "hasSymbols") {
-      randomChar = getRandomSymbol();
-  }
-  return randomChar;
-}
-
-if (characters > 7 && characters < 129) {
-  var length = parseInt(characters, 10);
-  console.log("length: " + length);
-} else {
-  var length = false;
-  alert("Invalid Password length");
-}
-
-// if input is "yes" return true
-if (upperCase.toLowerCase() === 'yes') {
-  var hasUpper = true;
-  console.log("upper: " + hasUpper);
-}
-if (lowerCase.toLowerCase() === 'yes') {
-  var hasLower = true;
-  console.log("lower: " + hasLower);
-}
-if (numbers.toLowerCase() === 'yes') {
-  var hasNumbers = true;
-  console.log("number: " + hasNumbers);
-}
-if (symbols.toLowerCase() === 'yes') {
-  var hasSymbols = true;
-  console.log("symbol: " + hasSymbols);
-}
-
-
-
 // Add event listener to generate button
-generateBtn.addEventListener("click", writePassword); 
+generateBtn.addEventListener("click", writePassword);
 
-function generatePassword(hasUpper, hasLower, hasNumbers, hasSymbols, length) {
-  let generatedPassword = ("");
+function generatePassword() {
+  // user input
+  enter = parseInt(prompt("How many characters would you like your password? Choose between 8 and 128"));
+  // user validation 
+  if (!enter) {
+      alert("This needs a value");
+  } else if (enter < 8 || enter > 128) {
+      // Validates user input
+      // user input prompts begins
+      enter = parseInt(prompt("You must choose between 8 and 128"));
 
-  const typesCount = hasUpper + hasLower + hasNumbers + hasSymbols;
+  } else {
+      // Runs after user input is validated
+      confirmNumber = confirm("Will this contain numbers?");
+      confirmCharacter = confirm("Will this contain special characters?");
+      confirmUppercase = confirm("Will this contain Uppercase letters?");
+      confirmLowercase = confirm("Will this contain Lowercase letters?");
+  };
 
-  const typesArr = [{ hasUpper }, { hasLower }, { hasNumbers }, { hasSymbols }]
+  if (!confirmCharacter && !confirmNumber && !confirmUppercase && !confirmLowercase) {
+      choices = alert("You must choose a criteria!");
 
-  for (let i = 0; i < length; i += typesCount) {
-      typesArr.forEach(function(type) {
-          const funcName = Object.keys(type)[0];
-          generatedPassword = generatedPassword + randomFunc(funcName);
-      });
   }
 
-  return generatedPassword;
-}
+  else if (confirmCharacter && confirmNumber && confirmUppercase && confirmLowercase) {
 
-// Password generator functions
+      choices = character.concat(number, alpha, alpha2);
+  }
+ 
+  else if (confirmCharacter && confirmNumber && confirmUppercase) {
+      choices = character.concat(number, alpha2);
+  }
+  else if (confirmCharacter && confirmNumber && confirmLowercase) {
+      choices = character.concat(number, alpha);
+  }
+  else if (confirmCharacter && confirmLowercase && confirmUppercase) {
+      choices = character.concat(alpha, alpha2);
+  }
+  else if (confirmNumber && confirmLowercase && confirmUppercase) {
+      choices = number.concat(alpha, alpha2);
+  }
+ 
+  else if (confirmCharacter && confirmNumber) {
+      choices = character.concat(number);
 
-function getRandomLower() {
-  return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
-}
+  } else if (confirmCharacter && confirmLowercase) {
+      choices = character.concat(alpha);
 
-function getRandomUpper() {
-  return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
-}
+  } else if (confirmCharacter && confirmUppercase) {
+      choices = character.concat(alpha2);
+  }
+  else if (confirmLowercase && confirmNumber) {
+      choices = alpha.concat(number);
 
-function getRandomNumber() {
-  return String.fromCharCode(Math.floor(Math.random() * 10) + 48);
-}
+  } else if (confirmLowercase && confirmUppercase) {
+      choices = alpha.concat(alpha2);
 
-function getRandomSymbol() {
-  const symbols = "!@#$%^&*()<>?,."
-  return symbols[Math.floor(Math.random() * symbols.length)];
+  } else if (confirmNumber && confirmUppercase) {
+      choices = number.concat(alpha2);
+  }
+  
+  else if (confirmCharacter) {
+      choices = character;
+  }
+  else if (confirmNumber) {
+      choices = number;
+  }
+  else if (confirmLowercase) {
+      choices = alpha;
+  }
+  
+  else if (confirmUppercase) {
+      choices = space.concat(alpha2);
+  };
+
+  var password = [];
+  for (var i = 0; i < enter; i++) {
+      var pickChoices = choices[Math.floor(Math.random() * choices.length)];
+      password.push(pickChoices);
+  }
+  return password;
 }

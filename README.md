@@ -4,3 +4,4 @@ For this project i was assigned to create a random password generator with html 
 
 ### Link to Deployment
 #### Screenshot
+![Screenshot](password-generator.png)
